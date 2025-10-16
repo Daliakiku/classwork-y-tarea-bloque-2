@@ -56,3 +56,10 @@ function animate() {
 }
 
 animate();
+
+//steps I took to debug
+//1. Check console for errors
+//2. look up where the ball.y property was being created, and why it wasn't being found
+//3. Look up how to assign properties to an object using a function (return)
+//4. add return to assign the properties to the ball variable
+//5. done!
