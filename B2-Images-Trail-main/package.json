@@ -1,0 +1,13 @@
+{
+  "name": "b2-images-trail-main",
+  "version": "1.0.0",
+  "description": "Repositorio de inicio para hacer el ejercicio de un componente usual en páginas web.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

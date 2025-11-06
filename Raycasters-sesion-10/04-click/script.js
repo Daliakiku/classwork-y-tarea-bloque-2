@@ -68,13 +68,40 @@ window.addEventListener('mousemove', (event) => {
     mouse.y = -((event.clientY / sizes.height) * 2 - 1);
 });
 
+
 // Click event
 window.addEventListener('click', () => {
-    if (currentIntersect) {
+    var yellow = false; 
+    console.log(yellow);
+    if (mouseOnTop == true) {
+        if (yellow == false) {
         object1.material.color = new THREE.Color('#ffff00');
         console.log('Click sobre el mesh.');
-    }
+        var yellow = true;
+        console.log(yellow);
+            gsap.to(object1.rotation, {
+            y: object1.rotation.y + Math.PI * 4, // 720 degrees
+            duration: 3});
+        } if (yellow == true) {
+        object1.material.color = new THREE.Color('#ff6600');
+        console.log('Click sobre el mesh.');
+        var yellow = false;
+        console.log(yellow);
+        }
+    } 
 });
+
+
+// gsap.to(object1.rotation, {
+//     y: object1.rotation.y + Math.PI * 4, // 720 degrees
+//     duration: 3,
+//     onComplete: () => {
+//         // Reset the rotation to 0 after the animation
+//         object1.rotation.y = 0;
+//         console.log('Rotation reset');
+//     }
+// });
+
 
 //// Raycaster.
 const raycaster = new THREE.Raycaster();
@@ -85,6 +112,8 @@ const objectsToTest = [object1];
  * Animate
  */
 const clock = new THREE.Clock();
+
+var mouseOnTop = false;
 
 const tick = () => {
     const elapsedTime = clock.getElapsedTime();
@@ -97,41 +126,30 @@ const tick = () => {
     // Devuelve la información obtenida de los objetos que son atravesados por el rayo.
     const intersects = raycaster.intersectObjects(objectsToTest);
 
-    if (intersects.length) {
-        if (!currentIntersect) {
-            console.log('mouse enter');
-            currentIntersect = intersects[0];
+    if (intersects.length >=1) {
 
-            // Animate scale up with GSAP
+        if (mouseOnTop == false) {
+            mouseOnTop = true;
+            console.log('mouse crossed the object for the first time');
             gsap.to(object1.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 0.3 });
         }
+        if (!currentIntersect) {
+            console.log('mouse is going through an object');
+            currentIntersect = intersects[0];
+        }
     } else {
-        if (currentIntersect) {
-            console.log('mouse leave');
-            currentIntersect = null;
-
-            // Animate scale back to normal with GSAP
+        if (mouseOnTop == true){
+            mouseOnTop = false;
+            console.log('mouse left the object area');
             gsap.to(object1.scale, { x: 1, y: 1, z: 1, duration: 0.3 });
+
+        }
+
+        if (mouseOnTop == false){
+            object1.material.color = new THREE.Color('#ffff00');
+
         }
     }
-
-    // Click event
-    window.addEventListener('click', () => {
-        if (currentIntersect) {
-            console.log('Click on the ball');
-
-            // Animate the ball's rotation to spin 720 degrees
-            gsap.to(object1.rotation, {
-                y: object1.rotation.y + Math.PI * 4, // 720 degrees
-                duration: 3,
-                onComplete: () => {
-                    // Reset the rotation to 0 after the animation
-                    object1.rotation.y = 0;
-                    console.log('Rotation reset');
-                }
-            });
-        }
-    });
 
     // Render
     renderer.render(scene, camera);
